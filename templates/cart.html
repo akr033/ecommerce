@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+ This is the cart page. You can see all the items you have added to your cart here.
+{% endblock %}
+{% block title %}
+   Cart - ABC Store
+{% endblock %}
+{% block content %}
+<section class="cart-items">
+    {% if not cart_items %}
+    <h1 class="text-center" >Your cart is empty</h1>
+    <br>
+    <a href="{% url 'shop:allProdCat' %}" class="btn btn-primary mb-4">Continue Shopping</a>
+    {% else %}
+    <h1 class="text-center">Your cart</h1><br>
+    <table class="table cart_table">
+        <thead class="cart_thead">
+            <tr>
+                <th colspan="5">
+                    Your Items
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                  <a href="item.product.get_absolute_url"><img src="{{item.product.image.url}}" style="width:100px;height:100px;" alt="" class="float-left rounded custom_image"></a>
+                </td>
+                <td class="text-left">
+                  {{item.product.name}}
+                  <br>
+                  sku:{{item.product.id}}
+                  <br>
+                  Price:{{item.product.price}}
+                  <br>
+                  Qty: {{item.quantity}}x${{item.product.price}}
+                </td>
+                <td>
+                  $ {{item.sub_total}}
+                </td>
+                {% if item.quantity < item.product.stock %}
+                  <td>
+                    <a href="{% url 'cart:add_cart' item.product.id %}" class="custom_a"><i class="fa fa-plus custom_icon"> </i></a>
+                    &nbsp;<a href="{% url 'cart:cart_remove' item.product.id %}" class="custom_a"><i class="fa fa-minus custom_icon"> </i></a>
+                    &nbsp;<a href="{% url 'cart:full_remove' item.product.id %}" class="custom_icon"><i class="fa fa-trash custom_icon"> </i></a>
+                  </td>
+                {% else %}
+                 <td>
+                   &nbsp;<a href="{% url 'cart:cart_remove' item.product.id %}" class="custom_a"><i class="fa fa-minus custom_icon"> </i></a>
+                    &nbsp;<a href="{% url 'cart:full_remove' item.product.id %}" class="custom_icon"><i class="fa fa-trash custom_icon"> </i></a>
+                 </td>
+                {% endif %}
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="col-12 col-sm-12 col-md-12 col-lg-6 text-center">
+        <table class="table my_custom_table">
+          <thead class="my_custom_thead">
+          <tr>
+            <th>
+              Checkout
+            </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>
+              Please review your shopping cart items before proceeding payment
+            </td>
+          </tr>
+          <tr>
+            <td class="text-left">
+              Your Total is:<strong>{{ total }}</strong>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="mx-auto">
+          <a href="{% url 'shop:allProdCat' %}" class="btn btn-secondary btn-block my_custom_button">Continue shopping</a>
+        </div>
+        <div class="mx-auto">
+          <a href="{% url 'shop:allProdCat' %}" class="btn btn-success btn-block my_custom_button">Payment</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+<section>
+{% endblock %}
